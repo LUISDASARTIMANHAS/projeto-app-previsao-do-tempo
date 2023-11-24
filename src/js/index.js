@@ -1,6 +1,6 @@
 function getData() {
-    const cidade = document.getElementById("inputBusca").value;
-    const url = `https://pingobras-sg.glitch.me/climatempo/cidade=${cidade}`;
+    const cidade = document.getElementById("inputBusca");
+    const url = `https://pingobras-sg.glitch.me/api/climatempo/cidade=${cidade}`;
     const options = {
         "method": "GET",
         "mode": "cors",
@@ -22,7 +22,13 @@ function getData() {
         .then((data) => {
             console.log("DATA RESPONSE: ");
             console.log(data);
-            
+            preencherDados(data, cidade);
         })
         .catch((error) => alert(error));
+}
+
+function preencherDados(data, cidade) {
+    const labelCidade = document.getElementById("cidade");
+
+    labelCidade.textContent = cidade
 }
