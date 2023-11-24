@@ -1,17 +1,11 @@
 function getData() {
-    const cidade = document.getElementById("inputBusca");
-    const url = `https://pingobras-sg.glitch.me/api/climatempo/cidade=${cidade}`;
-    const options = {
-        "method": "GET",
-        "mode": "cors",
-        "headers": {
-            "content-type": "application/json;charset=utf-8",
-            "Authorization": "APIKey20231603",
-        }
-    };
+    const cidade = document.getElementById("inputBusca").value;
+    const key = "cd31863ae267407cb01212131232011"
+    const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${key}&q=${cidade}&aqi=no&lang=pt
+    `
 
-
-    fetch(url, options)
+    if(!cidade) return;
+    fetch(apiUrl)
         .then((response) => {
             if (response.ok) {
                 return response.json();
@@ -22,13 +16,30 @@ function getData() {
         .then((data) => {
             console.log("DATA RESPONSE: ");
             console.log(data);
-            preencherDados(data, cidade);
+            if(data.current) preencherDados(data);
         })
-        .catch((error) => alert(error));
+        .catch((error) => console.error(error));
 }
 
-function preencherDados(data, cidade) {
+function preencherDados(data) {
     const labelCidade = document.getElementById("cidade");
+    const labelTemperatura = document.getElementById("temperatura");
+    const labelCondicao = document.getElementById("condicao");
+    const labelHumidade = document.getElementById("humidade");
+    const labelVelocidadeVento = document.getElementById("velocidadeVento");
+    const labelIcon = document.getElementById("iconeCondicao");
 
-    labelCidade.textContent = cidade
+    const cidade = data.location.name
+    const temperatura = data.current.temp_c;
+    const condicao = data.current.condition.text;
+    const humidade = data.current.humidity;
+    const velocidadeVento = data.current.wind_kph;
+    const iconeCondicao = data.current.condition.icon;
+
+    labelCidade.textContent = cidade;
+    labelTemperatura.textContent = temperatura + "°C";
+    labelCondicao.textContent = condicao;
+    labelHumidade.textContent = humidade + "%";
+    labelVelocidadeVento.textContent = velocidadeVento + "km/h";
+    labelIcon.setAttribute("src",iconeCondicao);
 }
